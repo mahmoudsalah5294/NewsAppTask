@@ -9,9 +9,8 @@ import RxSwift
 import RxCocoa
 
 protocol HomeViewModelProtocol{
-    func fetchData()
+    func fetchData(searchName: String)
     var dataDriver:Driver<[Article]>{get}
-    func filterData(searchName:String)
 }
 
 class HomeViewModel:HomeViewModelProtocol{
@@ -24,9 +23,8 @@ class HomeViewModel:HomeViewModelProtocol{
         dataDriver = dataSubject.asDriver(onErrorJustReturn: [])
         self.dataSource = dataSource
     }
-    func fetchData() {
-        print("Fetching Data")
-        dataSource.fetchAllNews{response in
+    func fetchData(searchName: String) {
+        dataSource.fetchNews(searchWord: searchName){response in
             switch(response.status!){
             case .success:
                 if let data = response.data{
@@ -41,12 +39,5 @@ class HomeViewModel:HomeViewModelProtocol{
             }
         }
     }
-    
-    func filterData(searchName: String) {
-        
-//       let searchDriver =  dataDriver.asDriver().map{
-//           $0.filter{$0.title.contains(searchName)}
-//        }
-//        dataSubject.onNext(searchDriver)
-}
+ 
 }

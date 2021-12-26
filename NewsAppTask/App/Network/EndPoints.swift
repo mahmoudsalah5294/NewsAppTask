@@ -13,9 +13,13 @@ struct Endpoints {
     static let baseURL = "https://newsapi.org/v2/top-headlines?"
         
         
-    static let country = "country="
+    static let country = "&country="
+    
+    static let searchWord = "q="
     
     static let category = "&category="
+    
+    static let sortBy = "&sortBy=publishedAt"
     
     static let key = "&apiKey=ab0aaca68abe4f02a6a0f0764e1c0c56"
     

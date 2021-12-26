@@ -23,18 +23,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
-        
-        
         homeTableView.rowHeight = 250
         mySearchBar.delegate = self
         datasource = NetworkDataSource()
         homeViewModel = HomeViewModel(dataSource: datasource!)
-        
-        
-
-       
         
         homeViewModel?.dataDriver.drive(homeTableView.rx.items(cellIdentifier: "Cell")){ row , item , cell in
             (cell as? MyCustomCell)?.image = item.urlToImage
@@ -50,12 +42,13 @@ extension ViewController:UISearchBarDelegate{
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print("search: \(searchBar.text ?? "")")
-        homeViewModel?.filterData(searchName: searchBar.text ?? "")
+        homeViewModel?.fetchData(searchName: searchBar.text ?? "")
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         self.mySearchBar.endEditing(true)
+        homeViewModel?.fetchData(searchName: "")
         print("cancel")
     }
     
@@ -104,6 +97,6 @@ extension ViewController{
     }
             
        func callAPI(){
-           homeViewModel?.fetchData()
+           homeViewModel?.fetchData(searchName: "")
             }
 }
