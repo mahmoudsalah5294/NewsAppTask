@@ -15,7 +15,6 @@ protocol HomeViewModelProtocol{
 }
 
 class HomeViewModel:HomeViewModelProtocol{
-    
     private var dataSubject = PublishSubject<[Article]>()
     var dataDriver: Driver<[Article]>
     private var dataSource:NetworkDataSourceProtocol
@@ -26,7 +25,8 @@ class HomeViewModel:HomeViewModelProtocol{
         self.dataSource = dataSource
     }
     func fetchData() {
-        dataSource.fetchAllNews{ response in
+        print("Fetching Data")
+        dataSource.fetchAllNews{response in
             switch(response.status!){
             case .success:
                 if let data = response.data{
@@ -44,5 +44,9 @@ class HomeViewModel:HomeViewModelProtocol{
     
     func filterData(searchName: String) {
         
-    }
+//       let searchDriver =  dataDriver.asDriver().map{
+//           $0.filter{$0.title.contains(searchName)}
+//        }
+//        dataSubject.onNext(searchDriver)
+}
 }

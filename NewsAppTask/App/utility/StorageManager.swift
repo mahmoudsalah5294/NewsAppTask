@@ -13,6 +13,7 @@ class StorageManager{
         case onBoarding
         case country
         case category
+        case dateTime
     }
     
     func isOnBoarding()-> Bool {
@@ -37,5 +38,13 @@ class StorageManager{
     
     func getCategory()->String{
         UserDefaults.standard.object(forKey: Key.category.rawValue) as! String
+    }
+    
+    func setTime(time:UInt64){
+        UserDefaults.standard.set(time,forKey: Key.dateTime.rawValue)
+    }
+    
+    func getTime()-> UInt64{
+        UserDefaults.standard.object(forKey: Key.dateTime.rawValue) as! UInt64
     }
 }

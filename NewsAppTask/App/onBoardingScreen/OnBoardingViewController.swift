@@ -17,7 +17,6 @@ class OnBoardingViewController: UIViewController {
     
     private let storageManager = StorageManager()
     private let navigationManager = NavigationManager()
-    
     private var status = (false,false)
     private var selectedCountry:String?{
         didSet{
@@ -49,6 +48,7 @@ class OnBoardingViewController: UIViewController {
     
     @IBAction func setSettings(_ sender: UIButton) {
         setData(country: selectedCountry ?? "eg", category: selectedCategory ?? "")
+        getUserTime()
         updateFlag()
         navigationManager.show(screen: .homePage, inController: self)
     }
@@ -134,4 +134,14 @@ extension OnBoardingViewController{
     }
 }
 
+
+extension OnBoardingViewController{
+    func getUserTime(){
+        let currentDateTime = DispatchTime.now()
+//
+        let timeUInt64 = UInt64(currentDateTime.rawValue)
+
+        storageManager.setTime(time: timeUInt64)
+    }
+}
 

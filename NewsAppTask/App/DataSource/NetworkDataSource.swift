@@ -18,7 +18,6 @@ class NetworkDataSource:NetworkDataSourceProtocol{
     func fetchAllNews(completion: @escaping ResponseHandler<NewsModel>){
         let url = Endpoints.baseURL+Endpoints.country+storageManager.getCountry()+Endpoints.category+storageManager.getCategory()+Endpoints.key
         
-        print("url: \(url)")
         RequestHandler.shared.get(url: url, completion: completion)
     }
 }

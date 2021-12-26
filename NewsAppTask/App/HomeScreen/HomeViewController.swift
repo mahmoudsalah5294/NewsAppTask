@@ -15,12 +15,15 @@ class ViewController: UIViewController {
     
     @IBOutlet private weak var homeTableView: UITableView!
     
-    
-    var datasource:NetworkDataSourceProtocol?
-    var homeViewModel:HomeViewModelProtocol?
-    let disposeBag = DisposeBag()
+    private var timer : DispatchSourceTimer!
+    private let storageManager = StorageManager()
+    private var datasource:NetworkDataSourceProtocol?
+    private var homeViewModel:HomeViewModelProtocol?
+    private let disposeBag = DisposeBag()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         
         
@@ -30,9 +33,6 @@ class ViewController: UIViewController {
         homeViewModel = HomeViewModel(dataSource: datasource!)
         
         
-//        homeViewModel?.dataDriver.drive(onNext: { newsArticles in
-//            self.articlesArray = newsArticles
-//        })
 
        
         
@@ -40,18 +40,8 @@ class ViewController: UIViewController {
             (cell as? MyCustomCell)?.image = item.urlToImage
             (cell as? MyCustomCell)?.title = item.title
         }
-        homeViewModel?.fetchData()
-       
-        
-
-    
-        
-        
-
+        startTimer()
     }
-    
-
-
 }
 
 
@@ -60,7 +50,7 @@ extension ViewController:UISearchBarDelegate{
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print("search: \(searchBar.text ?? "")")
-        
+        homeViewModel?.filterData(searchName: searchBar.text ?? "")
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -78,10 +68,42 @@ extension ViewController{
         homeTableView.rx.modelSelected(Article.self).subscribe { article in
             let detailsVC = segue.destination as? DetailsViewController
             
-            print("\(article.element?.title)")
             detailsVC?.newsModel = article.element
             
         }
     }
     
+}
+
+
+
+
+extension ViewController{
+    
+    
+    func startTimer()
+    {
+        var timeUInt64 = storageManager.getTime()
+        var currentTime = DispatchTime(uptimeNanoseconds: timeUInt64)
+
+        if timer == nil {
+            timer = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
+            timer.schedule(deadline: currentTime, repeating: 30*60)
+            timer.setEventHandler {
+                
+                let currentDateTime = DispatchTime.now()
+        
+                let timeUInt64 = UInt64(currentDateTime.rawValue)
+                self.storageManager.setTime(time: timeUInt64)
+                self.callAPI()
+            }
+            timer.activate()
+        } else {
+            timer.schedule(deadline: currentTime, repeating: 30*60)
+        }
+    }
+            
+       func callAPI(){
+           homeViewModel?.fetchData()
+            }
 }

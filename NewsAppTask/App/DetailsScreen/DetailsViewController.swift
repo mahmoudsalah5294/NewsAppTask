@@ -30,7 +30,6 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print("\(newsModel?.title) || \(newsModel.publisher)")
         myScrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height + 500)
         
         newsTitle.text = newsModel?.title
